@@ -7,14 +7,17 @@ from bs4 import BeautifulSoup
 
 # Create a new instance of the Chrome driver
 service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service)
+options = webdriver.ChromeOptions()
+options.add_argument('--blink-settings=imagesEnabled=false')
+driver = webdriver.Chrome(service=service, options=options)
 headers = {
     'User-Agent':"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 }
 # Navigate to the Uniqlo website
 url = "https://www.uniqlo.com/tw/zh_TW/c/SALE1003.html"
+print("Start Getting")
 driver.get(url)
-
+print("Finished Getting")
 html = driver.page_source
 soup = BeautifulSoup(html, "html.parser")
 print("HTML Parsered")
@@ -24,9 +27,8 @@ product_links = soup.findAll("a", class_="product-herf")
 print("Exist: ", len(product_links), "Products")
 # Extract the productCode from the href attribute
 product_codes = []
-print(product_links)
+# print(product_links)
 for prod in product_links:
-    print(prod)
     print("Code: ", prod["href"].split("productCode=")[1][:14])
     product_codes.append(prod["href"].split("productCode=")[1])
 
